@@ -19,7 +19,7 @@ public class DefaultServiceRegistry implements ServiceRegistry{
     private final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     @Override
-    public <T> void registry(T service) {
+    public synchronized <T> void register(T service) {
         String name = service.getClass().getCanonicalName();
         if(registeredService.contains(name)) return;
         registeredService.add(name);
@@ -32,11 +32,11 @@ public class DefaultServiceRegistry implements ServiceRegistry{
             // getCanonicalName() 返回规范名称
             serviceMap.put(c.getCanonicalName(), service);
         }
-        logger.info("向接口：{} 注册服务：{}" + interfaces, name);
+        logger.info("向接口：{} 注册服务：{}" , interfaces, name);
     }
 
     @Override
-    public Object getService(String name) {
+    public synchronized Object getService(String name) {
         Object service = serviceMap.get(name);
         if(service == null){
             throw new RpcException(RpcError.SERVICE_NOT_FOUND);

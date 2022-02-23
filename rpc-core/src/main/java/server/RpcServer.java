@@ -2,6 +2,8 @@ package server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import registry.DefaultServiceRegistry;
+import registry.ServiceRegistry;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,13 +19,16 @@ public class RpcServer {
     /*
     建立线程池
      */
-    private final ExecutorService threadPool;
     private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+    private static final int corePoolSize = 5;
+    private static final int maximumPoolSize = 50;
+    private static final int keepAliveTime = 60;
+    private final ExecutorService threadPool;
+    private RequestHandler requestHandler = new RequestHandler();
+    private final ServiceRegistry registry;
 
-    public RpcServer() {
-        int corePoolSize = 5;
-        int maximumPoolSize = 50;
-        int keepAliveTime = 60;
+    public RpcServer(ServiceRegistry serviceRegistry) {
+        this.registry = serviceRegistry;
         // 阻塞队列
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(100);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
@@ -33,14 +38,15 @@ public class RpcServer {
     /*
     添加 register 提供接口调用方法
      */
-    public void register(Object service, int port){
+    public void start(int port){
         try(ServerSocket serverSocket = new ServerSocket(port)){
             logger.info("服务器正在启动...");
             Socket socket;
             while((socket = serverSocket.accept()) != null){
-                logger.info("客户端连接！IP为：" + socket.getInetAddress());
-                threadPool.execute(new WorkerThread(socket, service));
+                logger.info("消费者连接：{}：{} ", socket.getInetAddress(), socket.getPort());
+                threadPool.execute(new RequestHandlerThread(socket, requestHandler, registry));
             }
+            threadPool.shutdown();
         }catch (IOException e){
             logger.error("连接时有错误发生：", e);
         }
