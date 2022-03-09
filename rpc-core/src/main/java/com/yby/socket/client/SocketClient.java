@@ -1,6 +1,6 @@
-package client;
+package com.yby.socket.client;
 
-import entity.RpcRequest;
+import com.yby.entity.RpcRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class RpcClient {
-    private static final Logger logger = LoggerFactory.getLogger(RpcClient.class);
+public class SocketClient {
+    private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
 
     public Object sendRequest(RpcRequest request, String host, int port){
         try (Socket socket = new Socket(host, port)){

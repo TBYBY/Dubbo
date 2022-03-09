@@ -1,12 +1,13 @@
-package entity;
+package com.yby.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-@Builder
+@AllArgsConstructor
 
 /*
 客户端传输需要调用的 interface 和 方法 以及对应参数（防止重载）
@@ -36,4 +37,7 @@ public class RpcRequest implements Serializable {
     调用方法的参数类型
      */
     private Class<?>[] paramTypes;
+
+    public RpcRequest() {
+    }
 }

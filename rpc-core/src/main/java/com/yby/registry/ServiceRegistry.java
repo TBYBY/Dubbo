@@ -1,4 +1,4 @@
-package registry;
+package com.yby.registry;
 
 // 保存本地信息
 public interface ServiceRegistry {

@@ -1,3 +1,5 @@
+package com.yby.Services;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,4 +10,7 @@ import java.io.Serializable;
 public class HelloObject implements Serializable {
     private Integer id;
     private String message;
+
+    public HelloObject() {
+    }
 }

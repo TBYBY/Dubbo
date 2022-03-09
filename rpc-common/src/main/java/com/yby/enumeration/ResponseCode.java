@@ -1,9 +1,7 @@
-package enumeration;
+package com.yby.enumeration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import javax.management.loading.MLetContent;
 
 /*
 方法响应的状态码

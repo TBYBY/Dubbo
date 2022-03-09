@@ -1,6 +1,6 @@
-package RpcException;
+package com.yby.RpcException;
 
-import enumeration.RpcError;
+import com.yby.enumeration.RpcError;
 
 /**
  * Rpc调用异常

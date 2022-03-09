@@ -1,8 +1,8 @@
-package server;
+package com.yby;
 
-import entity.RpcRequest;
-import entity.RpcResponse;
-import enumeration.ResponseCode;
+import com.yby.entity.RpcRequest;
+import com.yby.entity.RpcResponse;
+import com.yby.enumeration.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

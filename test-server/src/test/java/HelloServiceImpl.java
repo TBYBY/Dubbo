@@ -1,8 +1,10 @@
+import com.yby.Services.HelloObject;
+import com.yby.Services.HelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // 实现通用接口 Hello
-public class HelloServiceImpl implements HelloService{
+public class HelloServiceImpl implements HelloService {
     private static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
 
     @Override

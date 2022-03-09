@@ -1,6 +1,6 @@
-package entity;
+package com.yby.entity;
 
-import enumeration.ResponseCode;
+import com.yby.enumeration.ResponseCode;
 import lombok.Data;
 
 import java.io.Serializable;
