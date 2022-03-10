@@ -9,6 +9,7 @@ import lombok.Getter;
  * 标识序列化和反序列化器
  */
 public enum SerializerCode {
+    KRYO(0),
     JSON(1);
 
     private final int code;
