@@ -1,11 +1,11 @@
-package com.yby.socket.server;
+package com.yby.transport.socket.server;
 
-import com.yby.RequestHandler;
+import com.yby.handler.RequestHandler;
 import com.yby.entity.RpcRequest;
 import com.yby.entity.RpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.yby.registry.ServiceRegistry;
+import com.yby.provider.ServiceProvider;
 
 
 import java.io.IOException;
@@ -22,9 +22,9 @@ public class RequestHandlerThread implements Runnable{
 
     private Socket socket;
     private RequestHandler requestHandler;
-    private ServiceRegistry registry;
+    private ServiceProvider registry;
 
-    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceRegistry registry) {
+    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceProvider registry) {
         this.socket = socket;
         this.requestHandler = requestHandler;
         this.registry = registry;
@@ -38,9 +38,9 @@ public class RequestHandlerThread implements Runnable{
         {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
             String interfaceName = rpcRequest.getInterfaceName();
-            Object service = registry.getService(interfaceName);
-            Object result = requestHandler.handle(rpcRequest, service);
-            objectOutputStream.writeObject(RpcResponse.success(result));
+            Object service = registry.getServiceProvider(interfaceName);
+            Object result = requestHandler.handle(rpcRequest);
+            objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             objectOutputStream.flush();
         }catch (IOException | ClassNotFoundException e){
             logger.error("调用或发送时有错误发生：", e);

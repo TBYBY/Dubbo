@@ -3,12 +3,13 @@ package com.yby.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-
 /*
 客户端传输需要调用的 interface 和 方法 以及对应参数（防止重载）
 确定传输格式
@@ -18,6 +19,12 @@ import java.io.Serializable;
 4. 参数实际值
  */
 public class RpcRequest implements Serializable {
+
+    /*
+   请求号
+    */
+    private String requestId;
+
     /*
     待调用接口名
      */
@@ -38,6 +45,5 @@ public class RpcRequest implements Serializable {
      */
     private Class<?>[] paramTypes;
 
-    public RpcRequest() {
-    }
+
 }

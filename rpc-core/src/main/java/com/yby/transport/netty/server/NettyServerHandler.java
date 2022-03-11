@@ -1,10 +1,10 @@
-package com.yby.Netty.server;
+package com.yby.transport.netty.server;
 
-import com.yby.RequestHandler;
+import com.yby.handler.RequestHandler;
 import com.yby.entity.RpcRequest;
 import com.yby.entity.RpcResponse;
-import com.yby.registry.DefaultServiceRegistry;
-import com.yby.registry.ServiceRegistry;
+import com.yby.provider.ServiceProviderImpl;
+import com.yby.provider.ServiceProvider;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,21 +17,19 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
     private static RequestHandler requestHandler;
-    private static ServiceRegistry serviceRegistry;
+    private static ServiceProvider serviceRegistry;
 
     static {
         requestHandler = new RequestHandler();
-        serviceRegistry = new DefaultServiceRegistry();
+        serviceRegistry = new ServiceProviderImpl();
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest msg) throws Exception {
         try{
             logger.info("服务器收到请求：{}", msg);
-            String interfaceName = msg.getInterfaceName();
-            Object service = serviceRegistry.getService(interfaceName);
-            Object result = requestHandler.handle(msg, service);
-            ChannelFuture future = ctx.writeAndFlush(RpcResponse.success(result));
+            Object result = requestHandler.handle(msg);
+            ChannelFuture future = ctx.writeAndFlush(RpcResponse.success(result, msg.getRequestId()));
             future.addListener(ChannelFutureListener.CLOSE);
         }finally {
             ReferenceCountUtil.release(msg);

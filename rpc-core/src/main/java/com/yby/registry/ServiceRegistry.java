@@ -1,9 +1,12 @@
 package com.yby.registry;
 
-// 保存本地信息
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
 public interface ServiceRegistry {
-    // 加入 service
-    <T> void register(T service);
-    // 获取 service
-    Object getService(String name);
+    // 注册服务
+    void register(String serviceName, InetSocketAddress inetSocketAddress);
+
+    // 查询服务
+    InetSocketAddress lookupService(String serviceName);
 }
