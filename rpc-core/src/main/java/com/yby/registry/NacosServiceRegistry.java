@@ -6,6 +6,8 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.yby.RpcException.RpcException;
 import com.yby.enumeration.RpcError;
+import com.yby.loadbalancer.LoadBalancer;
+import com.yby.loadbalancer.RandomLoadBalancer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,7 @@ public class NacosServiceRegistry implements ServiceRegistry {
 
     private static final String SERVER_ADDR = "127.0.0.1:8848";
     private static final NamingService namingService;
+    private final LoadBalancer loadBalancer;
 
     static {
         try{
@@ -28,6 +31,10 @@ public class NacosServiceRegistry implements ServiceRegistry {
         }
     }
 
+    public NacosServiceRegistry(LoadBalancer loadBalancer) {
+        if(loadBalancer == null) this.loadBalancer = new RandomLoadBalancer();
+        else this.loadBalancer = loadBalancer;
+    }
 
     @Override
     public void register(String serviceName, InetSocketAddress inetSocketAddress) {
@@ -43,7 +50,7 @@ public class NacosServiceRegistry implements ServiceRegistry {
     public InetSocketAddress lookupService(String serviceName) {
         try{
             List<Instance> instances =namingService.getAllInstances(serviceName);
-            Instance instance = instances.get(0);
+            Instance instance = loadBalancer.select(instances);
             return new InetSocketAddress(instance.getIp(), instance.getPort());
         } catch (NacosException e) {
             logger.error("获取服务时有错误发生：",e);
